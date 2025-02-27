@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: zemptai-backend
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "bash start.sh"
+    envVars:
+      - key: GOOGLE_API_KEY
+        sync: false
