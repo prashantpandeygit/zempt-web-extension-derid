@@ -12,7 +12,7 @@
   ],
   "host_permissions": [
     "http://localhost:8000/*",
-    "https://zemptai-web-extension.onrender.com/*"
+    "https://zempt-web-extension-derid.onrender.com/*"
   ],
   "background": {
     "service_worker": "background.js"

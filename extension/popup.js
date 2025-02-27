@@ -25,7 +25,7 @@ async function getExplanation(history) {
     try {
         const trimmedHistory = history.slice(-6);
         
-        const response = await fetch("https://zemptai-web-extension.onrender.com/explain", {
+        const response = await fetch("https://zempt-web-extension-derid.onrender.com/explain", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
