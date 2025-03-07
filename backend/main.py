@@ -12,23 +12,15 @@ load_dotenv()
 
 app = FastAPI()
 
-@app.get("/")
-async def health_check():
-    return {
-        "status": "running",
-        "service": "zemptAI",
-        "version": "1.0",
-        "endpoints": {
-            "explain": "/explain (POST)"
-        }
-    }
-
-# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*", "chrome-extension://agfnjnckbeemdejeojjhdmifihdafoep", "https://zemptai-web-extension.onrender.com/", "https://zemptai-web-extension.onrender.com/explain"],
+    allow_origins=[
+        "*",
+        "chrome-extension://agfnjnckbeemdejeojjhdmifihdafoep",
+        "https://zempt-web-extension-derid.onrender.com" 
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["POST", "GET"],  
     allow_headers=["*"],
 )
 
@@ -37,23 +29,20 @@ if not api_key:
     raise RuntimeError("GOOGLE_API_KEY not found in .env file")
 
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-pro')  
 
 class ChatRequest(BaseModel):
     conversation: list
     max_tokens: int = 200
-    system_prompt: str = None
 
 def format_prompt(history):
-    system_prompt = """You are zemptAI, a friendly AI assistant. Follow these rules:
+    system_prompt = """You are zemptAI. Follow these rules:
 1. Keep responses concise (1-2 short sentences)
 2. Maintain conversation context
-3. Use simple, casual language
-
-Current conversation:"""
+3. Use simple, casual language"""
     
     formatted = [system_prompt]
-    for msg in history[-10:]:  
+    for msg in history[-6:]:  
         if msg['role'] == 'system':
             continue
         prefix = "User" if msg['role'] == 'user' else "zemptAI"
@@ -74,36 +63,41 @@ async def explain(request: ChatRequest):
             )
         )
         
-        try:
-            response.resolve()
-            if not response.text:
-                return {"explanation": "I'm feeling a bit prickly today. Try again?"}
+        if not response.parts:
+            return {"explanation": "I'm feeling a bit prickly today. Try again?"}
             
-            cleaned_text = response.text.replace("**", "")
-            return {"explanation": cleaned_text}
-            
-        except Exception as e:
-            return {"explanation": f"zemptAI stumbled: {str(e)}"}
+        cleaned_text = response.text.replace("**", "").strip()
+        return {"explanation": cleaned_text}
         
     except Exception as e:
-        print(f"Server Error: {str(e)}")
+        print(f"Error: {str(e)}")
         return {"explanation": "Whoops! Try again soon!"}
 
-URL = "https://zemptai-web-extension.onrender.com/"  
+KEEP_ALIVE_URL = "https://zempt-web-extension-derid.onrender.com"  
 
 def keep_alive():
     while True:
         try:
-            response = requests.get(URL)
-            print(f"Keep-alive ping sent. Status Code: {response.status_code}")
-        except requests.RequestException as e:
-            print(f"Failed to ping {URL}: {e}")
-        time.sleep(600)  
+            response = requests.get(f"{KEEP_ALIVE_URL}/explain")
+            print(f"Keep-alive status: {response.status_code}")
+        except Exception as e:
+            print(f"Keep-alive failed: {str(e)}")
+        time.sleep(300)
 
 @app.on_event("startup")
 async def start_keep_alive():
     threading.Thread(target=keep_alive, daemon=True).start()
 
+@app.get("/")
+async def health_check():
+    return {
+        "status": "running",
+        "version": "1.1",
+        "endpoints": {
+            "/explain": {"methods": ["POST"]}
+        }
+    }
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
