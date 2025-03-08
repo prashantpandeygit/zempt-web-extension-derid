@@ -36,7 +36,7 @@ class ChatRequest(BaseModel):
     max_tokens: int = 200
 
 def format_prompt(history):
-    system_prompt = """You are zemptAI. Follow these rules:
+    system_prompt = """You are zempt. Follow these rules:
 1. Keep responses concise (1-2 short sentences)
 2. Maintain conversation context
 3. Use simple, casual language"""
@@ -78,7 +78,7 @@ KEEP_ALIVE_URL = "https://zempt-web-extension-derid.onrender.com"
 def keep_alive():
     while True:
         try:
-            response = requests.get(f"{KEEP_ALIVE_URL}/explain")
+            response = requests.get(f"{KEEP_ALIVE_URL}/")
             print(f"Keep-alive status: {response.status_code}")
         except Exception as e:
             print(f"Keep-alive failed: {str(e)}")
