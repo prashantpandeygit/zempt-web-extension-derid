@@ -6,8 +6,7 @@
   "description": "Get AI-powered explanations for selected text using right-click menu.",
   "permissions": [
     "activeTab",
-    "contextMenus",
-    "scripting"
+    "contextMenus"
   ],
   "host_permissions": [
     "http://localhost:8000/*",
