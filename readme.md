@@ -11,7 +11,7 @@ A Chrome extension that explains highlighted text using AI. Right-click any sele
 ## Install
 
 1. **Chrome Web Store**  
-   *(Pending approval)*
+   https://chromewebstore.google.com/detail/zempt/edohenoimgflmicmmgjpdjnfmgpibmdk
 
 2. **Manual Installation**:
    - Download this repository
