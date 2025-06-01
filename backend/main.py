@@ -29,7 +29,7 @@ if not api_key:
     raise RuntimeError("GOOGLE_API_KEY not found in .env file")
 
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-pro')  
+model = genai.GenerativeModel('gemini-1.5-flash')  
 
 class ChatRequest(BaseModel):
     conversation: list
