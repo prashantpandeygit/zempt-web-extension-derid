@@ -181,23 +181,28 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 0.7rem 1rem;
   background: var(--surface);
-  border-radius: var(--radius);
+  border: 1px solid var(--secondary);
+  border-radius: 10px;
   width: fit-content;
+  color: var(--text);
+  font-size: 14px;
+  align-self: flex-start;
+  margin-right: 15%;
 }
 
-.typing-dot {
+.typing-indicator .typing-dot {
   width: 8px;
   height: 8px;
-  background: var(--text);
+  background: var(--primary);
   border-radius: 50%;
   animation: bounce 1.4s infinite;
 }
 
 @keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-6px); }
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+  40% { transform: translateY(-6px); opacity: 1; }
 }
 
 .error-message {
