@@ -59,7 +59,7 @@ async function getExplanation(history) {
                 "X-Title": "zempt Web Extension"
             },
             body: JSON.stringify({
-                model: "meta-llama/llama-3.2-3b-instruct:free",
+                model: "anthropic/claude-3.5-haiku",
                 messages: messages,
                 max_tokens: 150,
                 temperature: 0.7
